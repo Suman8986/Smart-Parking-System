@@ -1,0 +1,46 @@
+// Include necessary libraries
+#include <NewPing.h>
+
+// Define the pins for ultrasonic sensors
+#define TRIGGER_PIN 2
+#define ECHO_PIN 3
+
+// Define the pins for LED indicators
+#define GREEN_LED_PIN 4
+#define RED_LED_PIN 5
+
+// Define the maximum distance for a car to be considered parked (in centimeters)
+#define MAX_PARK_DISTANCE 50
+
+// Initialize the NewPing object
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_PARK_DISTANCE);
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+
+  // Set LED pins as output
+  pinMode(GREEN_LED_PIN, OUTPUT);
+  pinMode(RED_LED_PIN, OUTPUT);
+}
+
+void loop() {
+  // Measure the distance using the ultrasonic sensor
+  int distance = sonar.ping_cm();
+
+  // Check if a car is parked based on the distance measured
+  if (distance <= MAX_PARK_DISTANCE) {
+    // Car is parked, turn on the red LED and turn off the green LED
+    digitalWrite(RED_LED_PIN, HIGH);
+    digitalWrite(GREEN_LED_PIN, LOW);
+    Serial.println("Car parked.");
+  } else {
+    // No car parked, turn off the red LED and turn on the green LED
+    digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(GREEN_LED_PIN, HIGH);
+    Serial.println("No car parked.");
+  }
+
+  // Add a delay before the next measurement
+  delay(1000);
+}
